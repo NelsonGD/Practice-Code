@@ -52,25 +52,42 @@ void printLL(LL *list)
 // Creates an empty linked list and returns the address
 LL *createLL()
 {
-	// your code here
+	LL* newList = malloc(sizeof(LL));
+
+	return newList;
 }
 
 // Initializes values inside an empty linked list to NULL
 void initLL(LL *ll) 
 {
-	// your code here
+	ll->head = NULL;
+	ll->tail = NULL;
 }
 
 // Creates an empty node and returns the address
 Node *createNode() 
 {
-	// your code here
+	Node* newNode = malloc(sizeof(Node));
+	// If the node is empty you are responsible to make the value and next equal to NULL
+	newNode -> next = NULL;
+	newNode -> value = NULL;
+
+	return newNode;
 }
 
 // Creates a node that holds a value and returns the address
 Node *createNodeWithValue(int val) 
 {
 	// your code here
+	Node* newNode = malloc(sizeof(Node));
+	// ALWAYS check if malloc was done properly
+	if(!newNode)
+		return NULL;
+	newNode->value = val;
+	// Remmeber to make the new node point to NULL
+	newNode->next = NULL;
+
+	return newNode;
 }
 
 // Return 1 if a node with a specific value exists within the linked list
@@ -78,11 +95,40 @@ Node *createNodeWithValue(int val)
 int containsNodeHead(Node *head, int val)
 {
 	// your code here
+
+	// check if list is empty
+	if(!head->next)
+		return 0;
+
+	// walker to traverse the list
+	Node* walker; // Since this node's only purpose is to traverse an already EXISTING list then you don't need to allocate memory for it, and if you do, you need to free it at the end.
+	walker = head; // start next to head since we don't need to check the head again
+	while(walker) // while walker is not NULL (false)
+	{
+		if(walker->value == val)
+			return 1;
+		walker = walker->next;
+	}
+
+	return 0;
 }
 
 int containsNodeLL(LL *list, int val)
 {
-	// your code here
+	//? This is good BUT you already have a function that does 90% of this, all you have to do is check if the list is empty or not
+	// if(!list)
+	// 	return 0;
+
+	// Node* walker = list->head;
+	// while(walker)
+	// {
+	// 	if(walker->value == val)
+	// 		return 1;
+	// 	walker = walker->next;
+	//}
+
+	// You are basically saying, return list is NULL if the list is NULL else run the function to look for the value in the function
+	return(list == NULL) ? 0 : containsNodeHead(list->head, val);
 }
 
 /*
@@ -111,31 +157,94 @@ int containsNodeLL(LL *list, int val)
 // Inserts an empty node to the head of a linked list and returns the new head
 Node *insertEmptyNodeToHead(Node *head) 
 {
-	// your code here
+	// Create new node.
+	Node* newNode = malloc(sizeof(Node));
+	// Make the newNode point to the new head.
+	newNode -> next = head;
+	// return new head
+	return newNode;
 }
 
 // Inserts a node with a value to the head of a linked list and returns the new head
 Node *insertNodeWithValueToHead(Node *head, int val) 
 {
 	// your code here
+
+	//* You already have a function that does this
+	//Node* newNode = malloc(sizeof(Node));
+	//newNode -> value = val; 
+
+	Node* node = createNodeWithValue(val);
+	// make it the new head by making it point to the head as next
+	node -> next = head;
+
+	return node;
 }
 
 // Inserts an empty node to the head of a linked list
 void insertNodeToListHead(LL *list) 
 {
 	// your code here
+	Node* node;
+
+	if(!list)
+		return;
+
+	// Check if you have a head, if you don't then just create one, and of course make it the same as the back
+	if(!list->head)
+	{	
+		list->head = createNode();
+		list->tail = list -> head;
+
+		return;
+	}
+	
+	node = creteNode();
+	node -> next = list->head;
+	list->head = node; // Since you are not returning anything, just make the list->head the NEW node
 }
 
 // Inserts a node with a value to the head of a linked list
 void insertNodeWithValueToListHead(LL *list, int val) 
 {
 	// your code here
+
+	if(!list)
+		return;
+	
+	if(!list->head)
+	{
+		list->head = createNodeWithValue(val);
+		list->tail = list->head;
+		return;
+	}
+
+	Node *node = createNodeWithValue(val);
+	node->next = list->head;
+	list -> head = node;
 }
 
 // Inserts an empty node to the tail of a linked list and returns the head
 Node *insertEmptyNodeToTail(Node *head) 
 {
 	// your code here
+	Node* node;
+
+	if(!head)
+		return createNode();
+
+	node = head;
+
+	while(node)
+	{
+		if(!node->next)
+			node->next = createNode();
+			break;
+		
+		node = node->next;
+	}
+ . . .  
+	return node;
 }
 
 // Inserts a node with a value to the tail of a linked list and returns the head
